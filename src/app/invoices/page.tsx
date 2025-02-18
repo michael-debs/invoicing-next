@@ -2,8 +2,9 @@
 
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
-import type { Invoice } from "@/modules/invoice/types";
+import { Invoice } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { getAllInvoices } from "@/modules/invoice/server/getAllInvoices";
 
 function InvoiceList(): React.ReactElement {
   const router = useRouter();
@@ -12,9 +13,8 @@ function InvoiceList(): React.ReactElement {
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        // TODO: get invoices from the database
-        // const data = await window.electronAPI.getInvoices();
-        // setInvoices(data);
+        const data = await getAllInvoices();
+        setInvoices(data);
       } catch (error) {
         console.error("Failed to fetch invoices:", error);
       }
@@ -61,7 +61,7 @@ function InvoiceList(): React.ReactElement {
         </Typography>
         <Button
           variant="contained"
-          onClick={() => router.push("/create-invoice")}
+          onClick={() => router.push("/invoices/add")}
           sx={{
             bgcolor: "#1a237e",
             px: 4,
@@ -118,7 +118,7 @@ function InvoiceList(): React.ReactElement {
                   boxShadow: "0 12px 20px rgba(0, 0, 0, 0.1)",
                 },
               }}
-              onClick={() => router.push(`/invoice/${invoice.id}`)}
+              onClick={() => router.push(`/invoices/${invoice.id}`)}
             >
               <Box sx={{ mb: 2 }}>
                 <Typography
@@ -139,7 +139,7 @@ function InvoiceList(): React.ReactElement {
                     fontWeight: 500,
                   }}
                 >
-                  {invoice.clientName}
+                  {invoice.companyName}
                 </Typography>
                 <Typography
                   variant="body2"

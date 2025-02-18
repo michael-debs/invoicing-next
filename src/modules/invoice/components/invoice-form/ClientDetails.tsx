@@ -3,7 +3,7 @@ import { useInvoiceForm } from "./InvoiceFormContext";
 import RHFTextField from "../../../../components/RHF/RHFTextField";
 import { sectionStyle, sectionTitleStyle } from "./styles";
 
-function ClientDetails(): JSX.Element {
+function ClientDetails(): React.ReactNode {
   const {
     form: { control },
     isEditing,
@@ -22,16 +22,28 @@ function ClientDetails(): JSX.Element {
           disabled={!isEditing}
         />
         <RHFTextField
-          name="clientEmail"
-          label="Email"
+          name="partnershipNumber"
+          label="Partnership Number"
           control={control}
           disabled={!isEditing}
         />
         <RHFTextField
           name="clientAddress"
           label="Address"
+          control={control}
+          disabled={!isEditing}
           multiline
           rows={3}
+        />
+        <RHFTextField
+          name="clientEmail"
+          label="Email"
+          control={control}
+          disabled={!isEditing}
+        />
+        <RHFTextField
+          name="clientPhone"
+          label="Phone"
           control={control}
           disabled={!isEditing}
         />

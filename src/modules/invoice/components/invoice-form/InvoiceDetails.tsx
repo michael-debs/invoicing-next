@@ -3,12 +3,45 @@ import { useInvoiceForm } from "./InvoiceFormContext";
 import RHFTextField from "../../../../components/RHF/RHFTextField";
 import RHFDateField from "../../../../components/RHF/RHFDateField";
 import { sectionStyle, sectionTitleStyle } from "./styles";
+import { useEffect } from "react";
+import { getNextInvoiceNumber } from "../../server/getNextInvoiceNumber";
 
-function InvoiceDetails(): JSX.Element {
+function InvoiceDetails(): React.ReactNode {
   const {
-    form: { control },
+    form: { control, setValue },
     isEditing,
+    mode,
   } = useInvoiceForm();
+
+  useEffect(() => {
+    if (mode === "create") {
+      const fetchNextInvoiceNumber = async () => {
+        try {
+          const nextNumber = await getNextInvoiceNumber();
+          setValue("invoiceNumber", nextNumber);
+
+          // Set date to last day of current month, handling timezone correctly
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = today.getMonth();
+
+          // Get last day of current month at noon to avoid timezone issues
+          const lastDayOfMonth = new Date(
+            Date.UTC(year, month + 1, 0, 12, 0, 0)
+          );
+
+          // Get first day of next month at noon to avoid timezone issues
+          const nextMonth = new Date(Date.UTC(year, month + 1, 1, 12, 0, 0));
+
+          setValue("date", lastDayOfMonth.toISOString().split("T")[0]);
+          setValue("dueDate", nextMonth.toISOString().split("T")[0]);
+        } catch (error) {
+          console.error("Failed to fetch next invoice number:", error);
+        }
+      };
+      fetchNextInvoiceNumber();
+    }
+  }, [mode, setValue]);
 
   return (
     <Paper sx={sectionStyle}>
@@ -20,11 +53,17 @@ function InvoiceDetails(): JSX.Element {
           name="invoiceNumber"
           label="Invoice Number"
           control={control}
-          disabled={!isEditing}
+          disabled={true}
         />
         <RHFDateField
           name="date"
           label="Date"
+          control={control}
+          disabled={!isEditing}
+        />
+        <RHFDateField
+          name="dueDate"
+          label="Due Date"
           control={control}
           disabled={!isEditing}
         />

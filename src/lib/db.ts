@@ -2,7 +2,7 @@ import { PrismaClient, Invoice, InvoiceItem } from "@prisma/client";
 
 export type { Invoice, InvoiceItem };
 
-class DatabaseService {
+export class DatabaseService {
   private prisma: PrismaClient;
 
   constructor() {
@@ -41,7 +41,9 @@ class DatabaseService {
     });
   }
 
-  async getInvoice(id: number): Promise<Invoice | null> {
+  async getInvoice(
+    id: number
+  ): Promise<(Invoice & { items: InvoiceItem[] }) | null> {
     const invoice = await this.prisma.invoice.findUnique({
       where: {
         id,
@@ -56,6 +58,30 @@ class DatabaseService {
     }
 
     return invoice;
+  }
+
+  async updateInvoice(
+    id: number,
+    invoice: Partial<Omit<Invoice, "id">>,
+    items?: Omit<InvoiceItem, "id" | "invoiceId">[]
+  ): Promise<Invoice> {
+    return await this.prisma.invoice.update({
+      where: { id },
+      data: {
+        ...invoice,
+        ...(items && {
+          items: {
+            deleteMany: {},
+            createMany: {
+              data: items,
+            },
+          },
+        }),
+      },
+      include: {
+        items: true,
+      },
+    });
   }
 
   async close(): Promise<void> {

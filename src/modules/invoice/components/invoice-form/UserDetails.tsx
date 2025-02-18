@@ -1,6 +1,7 @@
 import { Box, Typography, Paper } from "@mui/material";
 import { useInvoiceForm } from "./InvoiceFormContext";
 import RHFTextField from "../../../../components/RHF/RHFTextField";
+import RHFFileField from "../../../../components/RHF/RHFFileField";
 import { sectionStyle, sectionTitleStyle } from "./styles";
 
 function UserDetails(): JSX.Element {
@@ -38,6 +39,12 @@ function UserDetails(): JSX.Element {
           label="Address"
           multiline
           rows={3}
+          control={control}
+          disabled={!isEditing}
+        />
+        <RHFFileField
+          name="userSignature"
+          label="Signature"
           control={control}
           disabled={!isEditing}
         />

@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Typography, Paper, Button, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useInvoiceForm } from "./InvoiceFormContext";
@@ -5,7 +6,7 @@ import RHFTextField from "../../../../components/RHF/RHFTextField";
 import { useFieldArray } from "react-hook-form";
 import { sectionStyle, sectionTitleStyle } from "./styles";
 
-function InvoiceItems(): JSX.Element {
+function InvoiceItems(): React.ReactElement {
   const {
     form: { control },
     isEditing,
