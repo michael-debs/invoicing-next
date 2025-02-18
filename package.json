@@ -9,6 +9,9 @@
     "lint": "next lint",
     "prisma:seed": "ts-node --project prisma/tsconfig.json prisma/seed.ts"
   },
+  "prisma": {
+    "seed": "ts-node --project prisma/tsconfig.json prisma/seed.ts"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
